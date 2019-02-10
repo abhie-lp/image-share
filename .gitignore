@@ -2,3 +2,4 @@ ngrok*
 .vscode
 __pycache__/
 migrations/
+.pylintrc
