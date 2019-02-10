@@ -1,5 +1,6 @@
 from . import forms, models
 
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.http.response import HttpResponse
@@ -69,6 +70,9 @@ def edit(request):
         if user_form.is_valid() and profile_form:
             user_form.save()
             profile_form.save()
+            messages.success(request, "Profile updated successfully.")
+        else:
+            messages.error(request, "Error updating your profile.")
     else:
         user_form = forms.UserEditForm(instance=request.user)
         profile_form = forms.ProfileEditForm(instance=request.user.profile)
