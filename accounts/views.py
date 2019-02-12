@@ -1,11 +1,13 @@
 from . import forms, models
+from image_share.common.decorators import ajax_required
 
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.views.decorators.http import require_POST
 
 
 
@@ -91,3 +93,24 @@ def user_list(request):
 def user_detail(request, username):
     user = get_object_or_404(User, username=username, is_active=True)
     return render(request, "accounts/user_detail.html", {"section": "people", "user": user})
+
+
+@ajax_required
+@require_POST
+@login_required
+def user_follow(request):
+    user_id = request.POST.get("id")
+    action = request.POST.get("action")
+    print("id and action", user_id, action)
+    if user_id and action:
+        try:
+            user = User.objects.get(id=user_id)
+            if action == "follow":
+                models.Contact.objects.get_or_create(user_from=request.user, user_to=user)
+            else:
+                models.Contact.objects.filter(user_from=request.user, user_to=user).delete()
+            
+            return JsonResponse({"status": "ok"})
+        except User.DoesNotExist:
+            return JsonResponse({"status": "ko"})
+    return JsonResponse({"status": "ko"})
