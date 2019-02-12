@@ -1,4 +1,6 @@
 from . import forms, models
+from actions.models import Action
+from actions.utils import create_action
 from image_share.common.decorators import ajax_required
 
 from django.contrib import messages
@@ -35,7 +37,16 @@ from django.views.decorators.http import require_POST
 
 @login_required
 def dashboard(request):
-    return render(request, "accounts/dashboard.html", {"section": "dashboard"})
+    # Display all action by default
+    actions = Action.objects.exclude(user=request.user)
+    following_ids = request.user.following.values_list("id", flat=True)
+
+    if following_ids:
+        # If user is following others, retreive only their actions
+        actions = actions.filter(user__id__in=following_ids)
+        actions = actions.select_related("user", "user__profile").prefetch_related("target")[:10]
+
+    return render(request, "accounts/dashboard.html", {"section": "dashboard", "actions": actions})
 
 
 def register(request):
@@ -52,6 +63,7 @@ def register(request):
             # Now save the user to the db
             new_user.save()
             models.Profile.objects.create(user=new_user)
+            create_action(new_user, "has created an account")
 
             return render(request, "accounts/register_done.html", {"new_user": new_user})
     else:
@@ -101,12 +113,12 @@ def user_detail(request, username):
 def user_follow(request):
     user_id = request.POST.get("id")
     action = request.POST.get("action")
-    print("id and action", user_id, action)
     if user_id and action:
         try:
             user = User.objects.get(id=user_id)
             if action == "follow":
                 models.Contact.objects.get_or_create(user_from=request.user, user_to=user)
+                create_action(request.user, "is following", user)
             else:
                 models.Contact.objects.filter(user_from=request.user, user_to=user).delete()
             
