@@ -1,4 +1,6 @@
 from . import forms, models
+from image_share.common.decorators import ajax_required
+
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http.response import JsonResponse
@@ -35,6 +37,7 @@ def image_detail(request, id, slug):
     return render(request, 'images/detail.html', {"section": "images", "image": image})
 
 
+@ajax_required
 @login_required
 @require_POST
 def image_like(request):
