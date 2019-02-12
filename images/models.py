@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 from django.utils.text import slugify
 
 
@@ -34,3 +35,6 @@ class Image(models.Model):
 
         self.image.delete()
         super(Image, self).delete(*args, **kwargs)
+    
+    def get_absolute_url(self):
+        return reverse("image_detail", args=[self.id, self.slug])
