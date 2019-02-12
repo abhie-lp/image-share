@@ -3,7 +3,8 @@ from image_share.common.decorators import ajax_required
 
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http.response import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http.response import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
@@ -57,3 +58,27 @@ def image_like(request):
             pass
     
     return JsonResponse({"status": "ko"})
+
+
+@login_required
+def image_list(request):
+    images = models.Image.objects.all()
+    paginator = Paginator(images, 8)
+    page = request.GET.get("page")
+    try:
+        images = paginator.page(page)
+    except PageNotAnInteger:
+        # Deliver the first page
+        images = paginator.page(1)
+    except EmptyPage:
+        if request.is_ajax():
+            # If the request is AJAX and the page is out of range return empty page
+            return HttpResponse("")
+        
+        # If page is out  of range deliver last page of results
+        images = paginator.page(paginator.num_pages)
+    
+    if request.is_ajax():
+        return render(request, "images/image_list_ajax.html", {"section": "images", "images": images})
+    
+    return render(request, "images/image_list.html", {"section": "images", "images": images})
