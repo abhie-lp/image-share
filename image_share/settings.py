@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "images.apps.ImagesConfig",
     "sorl.thumbnail",
+    "actions.apps.ActionsConfig",
 ]
 
 AUTHENTICATION_BACKENDS = [
