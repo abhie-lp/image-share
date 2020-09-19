@@ -1,5 +1,4 @@
-ngrok*
 .vscode
-__pycache__/
-migrations/
-.pylintrc
+__pycache__
+db.sqlite3
+.idea
