@@ -38,9 +38,27 @@
     </span>
     </div>
 
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">
+            {{ message|safe }}
+            <a href="#" class="close">X</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
     <div id="content">
       {% block content %}
       {% endblock content %}
     </div>
   </body>
+
+  <script>
+    const messages = document.getElementsByClassName("messages")[0]
+    if(messages){
+      setTimeout(() => messages.remove(), 10000)
+    }
+  </script>
 </html>
