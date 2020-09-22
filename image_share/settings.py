@@ -34,6 +34,10 @@ INSTALLED_APPS += [
     "django_extensions",
 ]
 
+INSTALLED_APPS += [
+    "images.apps.ImagesConfig",
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
