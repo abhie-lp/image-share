@@ -53,12 +53,13 @@
       {% block content %}
       {% endblock content %}
     </div>
+    <script>
+      const messages = document.getElementsByClassName("messages")[0]
+      if(messages){
+        setTimeout(() => messages.remove(), 10000)
+      }
+    </script>
+    {% block extra_script %}
+    {% endblock extra_script %}
   </body>
-
-  <script>
-    const messages = document.getElementsByClassName("messages")[0]
-    if(messages){
-      setTimeout(() => messages.remove(), 10000)
-    }
-  </script>
 </html>
