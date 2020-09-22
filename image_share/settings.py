@@ -1,3 +1,4 @@
+from os import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -13,7 +14,7 @@ SECRET_KEY = '547)-x(zx9-w@u!$qipt^@lv@+*n%b4+c*88b*5826xs1*bjls'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -26,6 +27,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+
+INSTALLED_APPS += [
+    "social_django",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -91,6 +97,9 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "account.authentication.EmailAuthBackend",
+    "social_core.backends.facebook.FacebookOAuth2",
+    "social_core.backends.twitter.TwitterOAuth",
+    "social_core.backends.google.GoogleOAuth2",
 ]
 
 
@@ -122,3 +131,11 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+SOCIAL_AUTH_FACEBOOK_KEY = environ["FB_KEY"]
+SOCIAL_AUTH_FACEBOOK_SECRET = environ["FB_SECRET"]
+SOCIAL_AUTH_FACEBOOK_SCOPE = ["email"]
+SOCIAL_AUTH_TWITTER_KEY = environ["TW_KEY"]
+SOCIAL_AUTH_TWITTER_SECRET = environ["TW_SECRET"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = environ["GG_KEY"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = environ["GG_SECRET"]

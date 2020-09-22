@@ -20,6 +20,23 @@
   </form>
   <p><a href="{% url 'password_reset' %}">Forgotten your password?</a></p>
   </div>
+
+  <div class="social">
+    <span><strong>Social Account Login</strong></span>
+    <ul>
+      <li class="facebook">
+        <a href="{% url 'social:begin' 'facebook' %}"><b>Facebook</b></a>
+      </li>
+
+      <li class="twitter">
+        <a href="{% url 'social:begin' 'twitter' %}"><b>Twitter</b></a>
+      </li>
+
+      <li class="google">
+        <a href="{% url 'social:begin' 'google-oauth2' %}"><b>Google</b></a>
+      </li>
+    </ul>
+  </div>
 {% endblock content %}
 
 {% block extra_script %}
