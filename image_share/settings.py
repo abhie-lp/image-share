@@ -32,6 +32,7 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     "social_django",
     "django_extensions",
+    "easy_thumbnails",
 ]
 
 INSTALLED_APPS += [
