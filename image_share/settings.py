@@ -1,5 +1,6 @@
 from os import environ
 from pathlib import Path
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -144,3 +145,7 @@ SOCIAL_AUTH_TWITTER_KEY = environ["TW_KEY"]
 SOCIAL_AUTH_TWITTER_SECRET = environ["TW_SECRET"]
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = environ["GG_KEY"]
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = environ["GG_SECRET"]
+
+ABSOLUTE_URL_OVERRIDES = {
+    "auth.user": lambda u: reverse_lazy("user_detail", args=(u.username,))
+}
