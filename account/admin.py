@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import Profile
+from .models import Profile, Contact
+
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = "user_from", "user_to", "created"
 
 
 @admin.register(Profile)
