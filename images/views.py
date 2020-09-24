@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
@@ -13,8 +13,18 @@ from .models import Image
 
 
 @login_required
-def image_list(request):
+def image_list(request, sort=None):
     images = Image.objects.all()
+    following_ids = list(request.user.following.values_list("id", flat=True))
+    if following_ids:
+        images = images.filter(user__in=following_ids + [request.user.id])
+    if sort:
+        if sort == "popularity":
+            images = images.order_by("-total_likes")
+        elif sort == "recent":
+            images = images.order_by("-created")
+        else:
+            return HttpResponseBadRequest()
     paginator = Paginator(images, 10)
     page = request.GET.get("page")
     try:

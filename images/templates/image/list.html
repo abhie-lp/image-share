@@ -4,6 +4,11 @@
 
 {% block content %}
   <h1>Images bookmarked</h1>
+  <ul class="sort" style="list-style: none;">
+    <li style="display: inline-block"><b>Sort</b>: </li>
+    <li style="display: inline-block;  padding-right: 10px"><a href="{% url 'images:list_sort' 'recent' %}">Most Recent</a></li>
+    <li style="display: inline-block"><a href="{% url 'images:list_sort' 'popularity' %}">Popularity</a></li>
+  </ul>
   <div id="image-list">
     {% include "image/list_ajax.html" %}
   </div>
