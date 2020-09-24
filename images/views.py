@@ -20,6 +20,19 @@ r = redis.Redis(
 
 
 @login_required
+def image_ranking(request):
+    # Get image ranking dictionary
+    image_rankings = r.zrange("image_ranking", 0, -1, desc=True)[:10]
+    image_ranking_ids = tuple(int(_id) for _id in image_rankings)
+    
+    # Get the most viewed images
+    most_viewed = list(Image.objects.filter(id__in=image_ranking_ids))
+    most_viewed.sort(key=lambda x: image_ranking_ids.index(x.id))
+    return render(request, "image/ranking.html",
+                  {"section": "ranking", "most_viewed": most_viewed})
+
+
+@login_required
 def image_list(request, sort=None):
     images = Image.objects.all()
     following_ids = list(request.user.following.values_list("id", flat=True))
@@ -91,6 +104,7 @@ def image_create(request):
 def image_detail(request, pk, slug):
     image = get_object_or_404(Image, id=pk, slug=slug)
     total_views = r.incr(f"image:{image.id}:views")
+    r.zincrby("image_ranking", 1, image.id)
     return render(request, "image/detail.html",
                   {"section": "images", "image": image,
                    "total_views": total_views})
