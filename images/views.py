@@ -1,3 +1,6 @@
+import redis
+
+from django.conf import settings
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
@@ -10,6 +13,10 @@ from common.decorators import ajax_required
 from actions.utils import create_action
 from .forms import ImageCreateForm
 from .models import Image
+
+r = redis.Redis(
+    host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB
+)
 
 
 @login_required
@@ -83,5 +90,7 @@ def image_create(request):
 
 def image_detail(request, pk, slug):
     image = get_object_or_404(Image, id=pk, slug=slug)
+    total_views = r.incr(f"image:{image.id}:views")
     return render(request, "image/detail.html",
-                  {"section": "images", "image": image})
+                  {"section": "images", "image": image,
+                   "total_views": total_views})

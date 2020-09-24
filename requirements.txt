@@ -5,3 +5,4 @@ django-extensions==3.0.9
 werkzeug==1.0.1
 pyOpenSSL==19.1.0
 easy-thumbnails==2.7
+redis==3.5.3
