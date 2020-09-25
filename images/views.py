@@ -14,8 +14,9 @@ from actions.utils import create_action
 from .forms import ImageCreateForm
 from .models import Image
 
-r = redis.Redis(
-    host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB
+r = redis.Redis.from_url(
+    f"{settings.REDIS_SCHEME}://:{settings.REDIS_PASSWORD}@"
+    f"{settings.REDIS_HOST}:{settings.REDIS_PORT}/{settings.REDIS_DB}",
 )
 
 

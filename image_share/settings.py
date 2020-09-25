@@ -15,7 +15,8 @@ SECRET_KEY = '547)-x(zx9-w@u!$qipt^@lv@+*n%b4+c*88b*5826xs1*bjls'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["abhie-image-share.herokuapp.com",
+                 "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -43,6 +44,7 @@ INSTALLED_APPS += [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -129,6 +131,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = BASE_DIR / "static",
+STATIC_ROOT = BASE_DIR / "static_files"
 
 LOGIN_REDIRECT_URL = "dashboard"
 LOGIN_URL = "login"
@@ -151,6 +154,11 @@ ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda u: reverse_lazy("user_detail", args=(u.username,))
 }
 
-REDIS_HOST = "localhost"
-REDIS_PORT = 6379
-REDIS_DB = 0
+# Redis Labs config
+REDIS_HOST = environ["R_HOST"]
+REDIS_PORT = environ["R_PORT"]
+REDIS_DB = environ["R_DB"]
+REDIS_PASSWORD = environ["R_PASSWORD"]
+REDIS_SCHEME = environ["R_SCHEME"]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
