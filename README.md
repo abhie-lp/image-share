@@ -1,4 +1,4 @@
-### Features
+### Awesome Features
 - Authentication
 - Password Change/Reset
 - Authentication using social media accounts
